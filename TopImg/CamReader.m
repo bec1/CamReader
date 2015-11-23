@@ -65,7 +65,10 @@ ex=exist(handles.outfolder,'dir');
 if (ex~=7)
     mkdir(handles.outfolder);
 end
-
+ex=exist(handles.secoutfolder,'dir');
+if (ex~=7)
+    mkdir(handles.secoutfolder);
+end
 %set up the input infolder
 handles.infolder='C:\data\Side imaging';
 set(handles.InFolder,'String',handles.infolder);
@@ -224,7 +227,7 @@ while get(handles.Scanning,'value')
         %movefile([handles.infolder,'\',temp.name],[handles.outfolder,'\',temp.name]);
         tempimg=readaia([handles.infolder,'\',temp.name]);
         fitswrite(tempimg,tempnamemodified);
-        copyfile(tempnamemodified,[handles.secoutfolder]);
+        copyfile(tempnamemodified,[handles.secoutfolder,'\',tempnamemodified]);
         movefile(tempnamemodified,[handles.outfolder,'\',tempnamemodified]);
         delete([handles.infolder,'\',temp.name]);
     end

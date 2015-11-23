@@ -1,0 +1,104 @@
+ant:
+<ant>
+  <mkdir dir="C:\Users\BEC1\Documents\GitHub\CamReader\TopImg\CamReaderAIA\for_redistribution" />
+  <mkdir dir="C:\Users\BEC1\Documents\GitHub\CamReader\TopImg\CamReaderAIA\for_testing" />
+  <mkdir dir="C:\Users\BEC1\Documents\GitHub\CamReader\TopImg\CamReaderAIA\for_redistribution_files_only" />
+</ant>
+mcc -C -o CamReaderAIA -W WinMain:CamReaderAIA -T link:exe -d C:\Users\BEC1\Documents\GitHub\CamReader\TopImg\CamReaderAIA\for_testing -v C:\Users\BEC1\Documents\GitHub\CamReader\TopImg\CamReader.m 
+[Warning: Function format has the same name as a MATLAB builtin. We suggest you
+rename the function to avoid a potential name conflict.] 
+Compiler version: 5.2 (R2014b)
+Dependency analysis by REQUIREMENTS.
+Begin validation of MEX files: Wed Nov 18 22:13:24 2015
+Validating 'C:\Program Files\MATLAB\R2014b\bin\win32\libmwbwpackc.dll'.
+No conflicting MATLAB file found.
+Validating 'C:\Program Files\MATLAB\R2014b\bin\win32\libmwbwpackctbb.dll'.
+No conflicting MATLAB file found.
+Validating 'C:\Program Files\MATLAB\R2014b\bin\win32\libmwbwunpackc.dll'.
+No conflicting MATLAB file found.
+Validating 'C:\Program Files\MATLAB\R2014b\bin\win32\libmwbwunpackctbb.dll'.
+No conflicting MATLAB file found.
+Validating 'C:\Program Files\MATLAB\R2014b\bin\win32\libmwcannythresholding_tbb.dll'.
+No conflicting MATLAB file found.
+Validating 'C:\Program Files\MATLAB\R2014b\bin\win32\libmwedgethinning.dll'.
+No conflicting MATLAB file found.
+Validating 'C:\Program Files\MATLAB\R2014b\bin\win32\libmwedgethinning_tbb.dll'.
+No conflicting MATLAB file found.
+Validating 'C:\Program Files\MATLAB\R2014b\bin\win32\libmwgrayto16.dll'.
+No conflicting MATLAB file found.
+Validating 'C:\Program Files\MATLAB\R2014b\bin\win32\libmwgrayto8.dll'.
+No conflicting MATLAB file found.
+Validating 'C:\Program Files\MATLAB\R2014b\bin\win32\libmwimhist_st.dll'.
+No conflicting MATLAB file found.
+Validating 'C:\Program Files\MATLAB\R2014b\bin\win32\libmwimreconstruct.dll'.
+No conflicting MATLAB file found.
+Validating 'C:\Program Files\MATLAB\R2014b\bin\win32\libmwint16touint16.dll'.
+No conflicting MATLAB file found.
+Validating 'C:\Program Files\MATLAB\R2014b\bin\win32\libmwipp.dll'.
+No conflicting MATLAB file found.
+Validating 'C:\Program Files\MATLAB\R2014b\bin\win32\libmwippBinder.dll'.
+No conflicting MATLAB file found.
+Validating 'C:\Program Files\MATLAB\R2014b\bin\win32\libmwippfilter.dll'.
+No conflicting MATLAB file found.
+Validating 'C:\Program Files\MATLAB\R2014b\bin\win32\libmwippgeotrans.dll'.
+No conflicting MATLAB file found.
+Validating 'C:\Program Files\MATLAB\R2014b\bin\win32\libmwippmedianfilter.dll'.
+No conflicting MATLAB file found.
+Validating 'C:\Program Files\MATLAB\R2014b\bin\win32\libmwiptutil.dll'.
+No conflicting MATLAB file found.
+Validating 'C:\Program Files\MATLAB\R2014b\bin\win32\libmwmorphop_binary_tbb.dll'.
+No conflicting MATLAB file found.
+Validating 'C:\Program Files\MATLAB\R2014b\bin\win32\libmwmorphop_ipp.dll'.
+No conflicting MATLAB file found.
+Validating 'C:\Program Files\MATLAB\R2014b\bin\win32\libmwmorphop_packed.dll'.
+No conflicting MATLAB file found.
+Validating 'C:\Program Files\MATLAB\R2014b\bin\win32\libmwneighborhood.dll'.
+No conflicting MATLAB file found.
+Validating 'C:\Program Files\MATLAB\R2014b\bin\win32\libmwnhood.dll'.
+No conflicting MATLAB file found.
+Validating 'C:\Program Files\MATLAB\R2014b\bin\win32\libmwtbbhist.dll'.
+No conflicting MATLAB file found.
+Validating 'C:\Program Files\MATLAB\R2014b\bin\win32\libmwuint16toint16.dll'.
+No conflicting MATLAB file found.
+Validating 'C:\Program Files\MATLAB\R2014b\toolbox\images\images\private\parityscan.mexw32'.
+No conflicting MATLAB file found.
+End validation of MEX files: Wed Nov 18 22:13:24 2015
+[Warning: Adding path "C:\Users\BEC1\Documents\GitHub\CamReader\TopImg" to
+Compiler path instance.] 
+Parsing file "C:\Users\BEC1\Documents\GitHub\CamReader\TopImg\CamReader.m"
+	(Referenced from: "Compiler Command Line").
+Deleting 26 temporary MEX authorization files.
+Removing: 'C:\Users\BEC1\AppData\Local\Temp\mathworks_tmp_7648_28114_7648.auth'.
+Removing: 'C:\Users\BEC1\AppData\Local\Temp\mathworks_tmp_7648_22843_7648.auth'.
+Removing: 'C:\Users\BEC1\AppData\Local\Temp\mathworks_tmp_7648_2643_7648.auth'.
+Removing: 'C:\Users\BEC1\AppData\Local\Temp\mathworks_tmp_7648_19202_7648.auth'.
+Removing: 'C:\Users\BEC1\AppData\Local\Temp\mathworks_tmp_7648_17213_7648.auth'.
+Removing: 'C:\Users\BEC1\AppData\Local\Temp\mathworks_tmp_7648_18724_7648.auth'.
+Removing: 'C:\Users\BEC1\AppData\Local\Temp\mathworks_tmp_7648_21341_7648.auth'.
+Removing: 'C:\Users\BEC1\AppData\Local\Temp\mathworks_tmp_7648_27097_7648.auth'.
+Removing: 'C:\Users\BEC1\AppData\Local\Temp\mathworks_tmp_7648_11294_7648.auth'.
+Removing: 'C:\Users\BEC1\AppData\Local\Temp\mathworks_tmp_7648_9362_7648.auth'.
+Removing: 'C:\Users\BEC1\AppData\Local\Temp\mathworks_tmp_7648_19482_7648.auth'.
+Removing: 'C:\Users\BEC1\AppData\Local\Temp\mathworks_tmp_7648_30406_7648.auth'.
+Removing: 'C:\Users\BEC1\AppData\Local\Temp\mathworks_tmp_7648_25298_7648.auth'.
+Removing: 'C:\Users\BEC1\AppData\Local\Temp\mathworks_tmp_7648_22314_7648.auth'.
+Removing: 'C:\Users\BEC1\AppData\Local\Temp\mathworks_tmp_7648_2107_7648.auth'.
+Removing: 'C:\Users\BEC1\AppData\Local\Temp\mathworks_tmp_7648_25599_7648.auth'.
+Removing: 'C:\Users\BEC1\AppData\Local\Temp\mathworks_tmp_7648_4798_7648.auth'.
+Removing: 'C:\Users\BEC1\AppData\Local\Temp\mathworks_tmp_7648_21392_7648.auth'.
+Removing: 'C:\Users\BEC1\AppData\Local\Temp\mathworks_tmp_7648_12381_7648.auth'.
+Removing: 'C:\Users\BEC1\AppData\Local\Temp\mathworks_tmp_7648_26844_7648.auth'.
+Removing: 'C:\Users\BEC1\AppData\Local\Temp\mathworks_tmp_7648_3228_7648.auth'.
+Removing: 'C:\Users\BEC1\AppData\Local\Temp\mathworks_tmp_7648_19409_7648.auth'.
+Removing: 'C:\Users\BEC1\AppData\Local\Temp\mathworks_tmp_7648_6214_7648.auth'.
+Removing: 'C:\Users\BEC1\AppData\Local\Temp\mathworks_tmp_7648_14423_7648.auth'.
+Removing: 'C:\Users\BEC1\AppData\Local\Temp\mathworks_tmp_7648_7364_7648.auth'.
+Removing: 'C:\Users\BEC1\AppData\Local\Temp\mathworks_tmp_7648_2766_7648.auth'.
+Generating file "C:\Users\BEC1\Documents\GitHub\CamReader\TopImg\CamReaderAIA\for_testing\readme.txt".
+Packaging...
+Adding custom icon C:\Users\BEC1\Documents\GitHub\CamReader\TopImg\CamReaderAIA_resources\icon.ico to C:\Users\BEC1\Documents\GitHub\CamReader\TopImg\CamReaderAIA\for_testing\CamReaderAIA.exe.
+Attempting to embed the CTF archive into the application C:\Users\BEC1\Documents\GitHub\CamReader\TopImg\CamReaderAIA\for_testing\CamReaderAIA.exe.
+Finished embedding CTF archive. Deleting the external CTF archive.
+Creating the bundle...
+Web based installer created at C:\Users\BEC1\Documents\GitHub\CamReader\TopImg\CamReaderAIA\for_redistribution\MyAppInstaller_web.exe.
+Packaging complete.
