@@ -59,7 +59,7 @@ MonthString = datestr(now,'yyyy-mm');
 DateString = datestr(now,'yyyy-mm-dd');
 handles.outfolder=['C:\',MonthString,'\',DateString];
 set(handles.OutFolder,'String',handles.outfolder);
-handles.secoutfolder=['C:\Users\BEC1\Dropbox (MIT)\BEC1\Image Data and Cicero Files\Data - Raw Images\',YearString,'\',MonthString,'\',DateString];
+handles.secoutfolder=[getenv('USERPROFILE'),'\Dropbox (MIT)\BEC1\Image Data and Cicero Files\Data - Raw Images\',YearString,'\',MonthString,'\',DateString];
 set(handles.SecOutFolder,'String',handles.secoutfolder);
 ex=exist(handles.outfolder,'dir');
 if (ex~=7)
