@@ -1,0 +1,21 @@
+mcc -C -o CamReader -W WinMain:CamReader -T link:exe -d C:\Users\Elder\Documents\GitHub\CamReader\SideImg\CamReader\for_testing -v C:\Users\Elder\Documents\GitHub\CamReader\SideImg\CamReader.m 
+Compiler version: 6.1 (R2015b)
+
+Dependency analysis by REQUIREMENTS.
+
+[Warning: Adding path "C:\Users\Elder\Documents\GitHub\CamReader\SideImg" to
+Compiler path instance.] 
+[] 
+Parsing file "C:\Users\Elder\Documents\GitHub\CamReader\SideImg\CamReader.m"
+	(Referenced from: "Compiler Command Line").
+Deleting 1 temporary MEX authorization files.
+Removing: 'C:\Users\Elder\AppData\Local\Temp\mathworks_tmp_023684392_9064.auth'.
+Generating file "C:\Users\Elder\Documents\GitHub\CamReader\SideImg\CamReader\for_testing\readme.txt".
+Packaging...
+Adding custom icon C:\Program Files\MATLAB\R2015b\toolbox\compiler\Resources\default_icon.ico to C:\Users\Elder\Documents\GitHub\CamReader\SideImg\CamReader\for_testing\CamReader.exe.
+Attempting to embed the CTF archive into the application C:\Users\Elder\Documents\GitHub\CamReader\SideImg\CamReader\for_testing\CamReader.exe.
+Finished embedding CTF archive. Deleting the external CTF archive.
+Creating the bundle...
+Web based installer created at C:\Users\Elder\Documents\GitHub\CamReader\SideImg\CamReader\for_redistribution\MyAppInstaller_web.exe.
+Packaging complete.
+Elapsed packaging time was: 33 seconds.
