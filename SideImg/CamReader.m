@@ -22,7 +22,7 @@ function varargout = CamReader(varargin)
 
 % Edit the above text to modify the response to help CamReader
 
-% Last Modified by GUIDE v2.5 11-Nov-2015 17:05:00
+% Last Modified by GUIDE v2.5 15-Dec-2015 14:15:38
 
 % Begin initialization code - DO NOT EDIT
 gui_Singleton = 1;
@@ -819,3 +819,11 @@ handles.secoutfolder=secoutdir;
 set(handles.SecOutFolder,'String',handles.secoutfolder);
 guidata(hObject, handles);
 guidata(hObject,handles);
+
+
+% --- If Enable == 'on', executes on mouse press in 5 pixel border.
+% --- Otherwise, executes on mouse press in 5 pixel border or over Max.
+function Max_ButtonDownFcn(hObject, eventdata, handles)
+% hObject    handle to Max (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)

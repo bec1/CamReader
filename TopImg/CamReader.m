@@ -22,7 +22,7 @@ function varargout = CamReader(varargin)
 
 % Edit the above text to modify the response to help CamReader
 
-% Last Modified by GUIDE v2.5 11-Nov-2015 17:05:00
+% Last Modified by GUIDE v2.5 14-Dec-2015 15:19:23
 
 % Begin initialization code - DO NOT EDIT
 gui_Singleton = 1;
@@ -831,3 +831,12 @@ handles.secoutfolder=secoutdir;
 set(handles.SecOutFolder,'String',handles.secoutfolder);
 guidata(hObject, handles);
 guidata(hObject,handles);
+
+
+% --- Executes on button press in SceEnable.
+function SceEnable_Callback(hObject, eventdata, handles)
+% hObject    handle to SceEnable (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hint: get(hObject,'Value') returns toggle state of SceEnable

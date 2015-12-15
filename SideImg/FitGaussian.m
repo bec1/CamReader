@@ -10,6 +10,11 @@ Ydata=Image(:);
 a=max(Ydata)-min(Ydata);
 b=min(Ydata);
 fitfun = @(p,X)(gaussian(X,p(3),p(1),p(2),p(4),p(5)));
-P=nlinfit(Xdata,Ydata,fitfun,[Xc1,Yc1,sigma,a,b]);
+try
+    P=nlinfit(Xdata,Ydata,fitfun,[Xc1,Yc1,sigma,a,b]);
+catch 
+    disp('Warning: Gaussian fit failed')
+    P = nan;
+end
 end
 
