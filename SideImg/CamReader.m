@@ -22,7 +22,7 @@ function varargout = CamReader(varargin)
 
 % Edit the above text to modify the response to help CamReader
 
-% Last Modified by GUIDE v2.5 15-Dec-2015 14:15:38
+% Last Modified by GUIDE v2.5 15-Dec-2015 17:15:25
 
 % Begin initialization code - DO NOT EDIT
 gui_Singleton = 1;
@@ -87,6 +87,7 @@ handles.xmax=round(str2double(get(handles.Xmax,'string')));
 handles.ymin=round(str2double(get(handles.Ymin,'string')));
 handles.ymax=round(str2double(get(handles.Ymax,'string')));
 set(handles.Counting,'value',0);
+set(handles.Bgsub,'value',0);
 handles.scanning=false;
 
 
@@ -177,8 +178,18 @@ if get(handles.Counting,'value') % do the atom counting
     xmax=min(Xr,xmax);
     ymin=max(1,ymin);
     ymax=min(Yr,ymax);
-    atomcountimg=img(ymin:ymax,xmin:xmax,:);
+    atomcountimg=img;
     atomnumbermap=AtomNumber(atomcountimg,pixelsize,sigma, satcount);
+    
+    if get(handles.Bgsub,'value')
+        bgimg = atomnumbermap(ymax:ymax+53, xmin:xmax,:);
+        [bgx,bgy] = size(bgimg);
+        bgCount = sum(sum(bgimg))/(bgx*bgy)
+    else 
+        bgCount = 0
+    end
+    
+    atomnumbermap = atomnumbermap(ymin:ymax,xmin:xmax) - bgCount;
     atomnumber=sum(sum(atomnumbermap));
     atomnumberG=FindAtomNumberGaussian(atomnumbermap);
     set(handles.AtomNumberG,'string',num2str(atomnumberG, '%10.3e' ));
@@ -270,8 +281,18 @@ while get(handles.Scanning,'value')
             xmax=min(Xr,xmax);
             ymin=max(1,ymin);
             ymax=min(Yr,ymax);
-            atomcountimg=img(ymin:ymax,xmin:xmax,:);
-            atomnumbermap=AtomNumber(atomcountimg,pixelsize,sigma, satcount);
+             atomcountimg=img;
+    atomnumbermap=AtomNumber(atomcountimg,pixelsize,sigma, satcount);
+    
+    if get(handles.Bgsub,'value')
+        bgimg = atomnumbermap(ymax:ymax+53, xmin:xmax,:);
+        [bgx,bgy] = size(bgimg);
+        bgCount = sum(sum(bgimg))/(bgx*bgy)
+    else 
+        bgCount = 0
+    end
+    
+    atomnumbermap = atomnumbermap(ymin:ymax,xmin:xmax) - bgCount;
             atomnumber=sum(sum(atomnumbermap));
             atomnumberG=FindAtomNumberGaussian(atomnumbermap);
             set(handles.AtomNumberG,'string',num2str(atomnumberG, '%10.3e' ));
@@ -371,8 +392,18 @@ if get(handles.Counting,'value') % do the atom counting
     xmax=min(Xr,xmax);
     ymin=max(1,ymin);
     ymax=min(Yr,ymax);
-    atomcountimg=img(ymin:ymax,xmin:xmax,:);
+     atomcountimg=img;
     atomnumbermap=AtomNumber(atomcountimg,pixelsize,sigma, satcount);
+    
+    if get(handles.Bgsub,'value')
+        bgimg = atomnumbermap(ymax:ymax+53, xmin:xmax,:);
+        [bgx,bgy] = size(bgimg);
+        bgCount = sum(sum(bgimg))/(bgx*bgy)
+    else 
+        bgCount = 0
+    end
+    
+    atomnumbermap = atomnumbermap(ymin:ymax,xmin:xmax) - bgCount;
     atomnumber=sum(sum(atomnumbermap));
     atomnumberG=FindAtomNumberGaussian(atomnumbermap);
     set(handles.AtomNumberG,'string',num2str(atomnumberG, '%10.3e' ));
@@ -583,8 +614,19 @@ if get(handles.Counting,'value') % do the atom counting
     xmax=min(Xr,xmax);
     ymin=max(1,ymin);
     ymax=min(Yr,ymax);
-    atomcountimg=img(ymin:ymax,xmin:xmax,:);
+    atomcountimg=img;
     atomnumbermap=AtomNumber(atomcountimg,pixelsize,sigma, satcount);
+    
+    if get(handles.Bgsub,'value')
+        bgimg = atomnumbermap(ymax:ymax+53, xmin:xmax,:);
+        [bgx,bgy] = size(bgimg);
+        bgCount = sum(sum(bgimg))/(bgx*bgy)
+    else 
+        bgCount = 0
+    end
+    
+    atomnumbermap = atomnumbermap(ymin:ymax,xmin:xmax) - bgCount;
+    
     atomnumber=sum(sum(atomnumbermap));
     atomnumberG=FindAtomNumberGaussian(atomnumbermap);
     set(handles.AtomNumberG,'string',num2str(atomnumberG, '%10.3e' ));
@@ -827,3 +869,12 @@ function Max_ButtonDownFcn(hObject, eventdata, handles)
 % hObject    handle to Max (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
+
+
+% --- Executes on button press in Bgsub.
+function Bgsub_Callback(hObject, eventdata, handles)
+% hObject    handle to Bgsub (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hint: get(hObject,'Value') returns toggle state of Bgsub
