@@ -306,8 +306,8 @@ while get(handles.Scanning,'value')
             xmax=min(Xr,xmax);
             ymin=max(1,ymin);
             ymax=min(Yr,ymax);
-            atomcountimg=img;
-            atomnumbermap=AtomNumber(atomcountimg,pixelsize,sigma, satcount);
+             atomcountimg=img;
+    atomnumbermap=AtomNumber(atomcountimg,pixelsize,sigma, satcount);
     
 %     if get(handles.Bgsub,'value')
 %         bgimg = atomnumbermap(ymax:ymax+53, xmin:xmax,:);
@@ -433,11 +433,9 @@ if get(handles.Counting,'value') % do the atom counting
 %     else 
 %         bgCount = 0
 %     end
-    atomnumbermap = atomnumbermap(ymin:ymax,xmin:xmax);
-    atomnumber=sum(sum(atomnumbermap));
     set(handles.AtomNumberP,'string',num2str(atomnumber, '%10.3e' ));
     
-    if get(handles.Gfit)
+    if get(handles.Gfit
         Pgaussian=GaussianFittingFunction( atomnumbermap );
         atomnumberG=Pgaussian(1)*Pgaussian(5)*Pgaussian(6)*2*pi;
         set(handles.AtomNumberG,'string',num2str(atomnumberG, '%10.3e' ));
@@ -663,13 +661,13 @@ if get(handles.Counting,'value') % do the atom counting
 %     end
     
 %     atomnumbermap = atomnumbermap(ymin:ymax,xmin:xmax) - bgCount;
-    atomnumbermap = atomnumbermap(ymin:ymax,xmin:xmax);
-    atomnumber=sum(sum(atomnumbermap));
-    set(handles.AtomNumberP,'string',num2str(atomnumber, '%10.3e' ));
     if get(handles.Gfit)
+        atomnumbermap = atomnumbermap(ymin:ymax,xmin:xmax);
+        atomnumber=sum(sum(atomnumbermap));
         Pgaussian=GaussianFittingFunction( atomnumbermap );
         atomnumberG=Pgaussian(1)*Pgaussian(5)*Pgaussian(6)*2*pi;
         set(handles.AtomNumberG,'string',num2str(atomnumberG, '%10.3e' ));
+        set(handles.AtomNumberP,'string',num2str(atomnumber, '%10.3e' ));
         DataP=num2cell(Pgaussian');
         set(handles.ParaTab,'data',[{'Amplitude';'Offset';'X0';'Y0';'sigma_X';'sigma_Y';'theta'},DataP]);
     end
