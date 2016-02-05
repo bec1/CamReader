@@ -22,7 +22,7 @@ function varargout = CamReader(varargin)
 
 % Edit the above text to modify the response to help CamReader
 
-% Last Modified by GUIDE v2.5 15-Dec-2015 17:15:25
+% Last Modified by GUIDE v2.5 04-Feb-2016 16:15:01
 
 % Begin initialization code - DO NOT EDIT
 gui_Singleton = 1;
@@ -57,13 +57,29 @@ handles.output = hObject;
 YearString=datestr(now,'yyyy');
 MonthString = datestr(now,'yyyy-mm');
 DateString = datestr(now,'yyyy-mm-dd');
-handles.outfolder=['C:\',MonthString,'\',DateString];
+handles.outfolder=['\\Elder-pc\j\Elder Backup Raw Images\',YearString,'\',MonthString,'\',DateString];
 set(handles.OutFolder,'String',handles.outfolder);
-handles.secoutfolder=['C:\Users\Elder\Dropbox (MIT)\BEC1\Image Data and Cicero Files\Data - Raw Images\',YearString,'\',MonthString,'\',DateString];
+username=getenv('USERNAME');
+handles.secoutfolder=['C:\Users\',username,'\Dropbox (MIT)\BEC1\Image Data and Cicero Files\Data - Raw Images\',YearString,'\',MonthString,'\',DateString];
 set(handles.SecOutFolder,'String',handles.secoutfolder);
 ex=exist(handles.outfolder,'dir');
 if (ex~=7)
-    mkdir(handles.outfolder);
+    try
+        mkdir(handles.outfolder);
+    catch
+        msgbox('Cannot find or create the default folder');
+        set(handles.OutFolder,'String','C:\');
+    end
+end
+ex=exist(handles.secoutfolder,'dir');
+if (ex~=7)
+    try
+        mkdir(handles.secoutfolder);
+    catch
+        msgbox('Cannot find or create the secondary default folder');
+        set(handles.OutFolder,'String','C:\secondary');
+        mkdir('C:\secondary');
+    end
 end
 
 %set up the input infolder
@@ -90,7 +106,9 @@ set(handles.Counting,'value',0);
 set(handles.Bgsub,'value',0);
 handles.scanning=false;
 
-
+%setup the parameter table for fitting
+Data=[{'Amplitude';'Offset';'X0';'Y0';'sigma_X';'sigma_Y';'theta'},{0;0;0;0;0;0;0}];
+set(handles.ParaTab,'data',Data);
 % Update handles structure
 guidata(hObject, handles);
 
@@ -181,19 +199,22 @@ if get(handles.Counting,'value') % do the atom counting
     atomcountimg=img;
     atomnumbermap=AtomNumber(atomcountimg,pixelsize,sigma, satcount);
     
-    if get(handles.Bgsub,'value')
-        bgimg = atomnumbermap(ymax:ymax+53, xmin:xmax,:);
-        [bgx,bgy] = size(bgimg);
-        bgCount = sum(sum(bgimg))/(bgx*bgy)
-    else 
-        bgCount = 0
-    end
+%     if get(handles.Bgsub,'value')
+%         bgimg = atomnumbermap(ymax:ymax+53, xmin:xmax,:);
+%         [bgx,bgy] = size(bgimg);
+%         bgCount = sum(sum(bgimg))/(bgx*bgy)
+%     else 
+%         bgCount = 0
+%     end
     
-    atomnumbermap = atomnumbermap(ymin:ymax,xmin:xmax) - bgCount;
+    atomnumbermap = atomnumbermap(ymin:ymax,xmin:xmax);
     atomnumber=sum(sum(atomnumbermap));
-    atomnumberG=FindAtomNumberGaussian(atomnumbermap);
+    Pgaussian=GaussianFittingFunction( atomnumbermap );
+    atomnumberG=Pgaussian(1)*Pgaussian(5)*Pgaussian(6)*2*pi;
     set(handles.AtomNumberG,'string',num2str(atomnumberG, '%10.3e' ));
     set(handles.AtomNumberP,'string',num2str(atomnumber, '%10.3e' ));
+    DataP=num2cell(Pgaussian');
+    set(handles.ParaTab,'data',[{'Amplitude';'Offset';'X0';'Y0';'sigma_X';'sigma_Y';'theta'},DataP]);
 end
 guidata(hObject,handles);
 
@@ -228,7 +249,9 @@ while get(handles.Scanning,'value')
         newnamelist=[[handles.outfolder,'\',temp.name],newnamelist];
         newnamelistshow=[temp.name,newnamelistshow];
         copyfile([handles.infolder,'\',temp.name],[handles.secoutfolder]);
-        movefile([handles.infolder,'\',temp.name],[handles.outfolder,'\',temp.name]);
+        if get(handles.SecAct,'value')
+            movefile([handles.infolder,'\',temp.name],[handles.outfolder,'\',temp.name]);
+        end
     end
     handles.list=[newnamelist,handles.list];
     handles.listshow=[newnamelistshow,handles.listshow];
@@ -284,19 +307,23 @@ while get(handles.Scanning,'value')
              atomcountimg=img;
     atomnumbermap=AtomNumber(atomcountimg,pixelsize,sigma, satcount);
     
-    if get(handles.Bgsub,'value')
-        bgimg = atomnumbermap(ymax:ymax+53, xmin:xmax,:);
-        [bgx,bgy] = size(bgimg);
-        bgCount = sum(sum(bgimg))/(bgx*bgy)
-    else 
-        bgCount = 0
-    end
+%     if get(handles.Bgsub,'value')
+%         bgimg = atomnumbermap(ymax:ymax+53, xmin:xmax,:);
+%         [bgx,bgy] = size(bgimg);
+%         bgCount = sum(sum(bgimg))/(bgx*bgy)
+%     else 
+%         bgCount = 0
+%     end
     
-    atomnumbermap = atomnumbermap(ymin:ymax,xmin:xmax) - bgCount;
+%     atomnumbermap = atomnumbermap(ymin:ymax,xmin:xmax) - bgCount;
+            atomnumbermap = atomnumbermap(ymin:ymax,xmin:xmax);
             atomnumber=sum(sum(atomnumbermap));
-            atomnumberG=FindAtomNumberGaussian(atomnumbermap);
+            Pgaussian=GaussianFittingFunction( atomnumbermap );
+            atomnumberG=Pgaussian(1)*Pgaussian(5)*Pgaussian(6)*2*pi;
             set(handles.AtomNumberG,'string',num2str(atomnumberG, '%10.3e' ));
             set(handles.AtomNumberP,'string',num2str(atomnumber, '%10.3e' ));
+            DataP=num2cell(Pgaussian');
+            set(handles.ParaTab,'data',[{'Amplitude';'Offset';'X0';'Y0';'sigma_X';'sigma_Y';'theta'},DataP]);
         end
     end
     set(handles.Imagelist,'String',handles.listshow);
@@ -392,22 +419,25 @@ if get(handles.Counting,'value') % do the atom counting
     xmax=min(Xr,xmax);
     ymin=max(1,ymin);
     ymax=min(Yr,ymax);
-     atomcountimg=img;
+    atomcountimg=img;
     atomnumbermap=AtomNumber(atomcountimg,pixelsize,sigma, satcount);
     
-    if get(handles.Bgsub,'value')
-        bgimg = atomnumbermap(ymax:ymax+53, xmin:xmax,:);
-        [bgx,bgy] = size(bgimg);
-        bgCount = sum(sum(bgimg))/(bgx*bgy)
-    else 
-        bgCount = 0
-    end
+%     if get(handles.Bgsub,'value')
+%         bgimg = atomnumbermap(ymax:ymax+53, xmin:xmax,:);
+%         [bgx,bgy] = size(bgimg);
+%         bgCount = sum(sum(bgimg))/(bgx*bgy)
+%     else 
+%         bgCount = 0
+%     end
     
-    atomnumbermap = atomnumbermap(ymin:ymax,xmin:xmax) - bgCount;
+    atomnumbermap = atomnumbermap(ymin:ymax,xmin:xmax);
     atomnumber=sum(sum(atomnumbermap));
-    atomnumberG=FindAtomNumberGaussian(atomnumbermap);
+    Pgaussian=GaussianFittingFunction( atomnumbermap );
+    atomnumberG=Pgaussian(1)*Pgaussian(5)*Pgaussian(6)*2*pi;
     set(handles.AtomNumberG,'string',num2str(atomnumberG, '%10.3e' ));
     set(handles.AtomNumberP,'string',num2str(atomnumber, '%10.3e' ));
+    DataP=num2cell(Pgaussian');
+    set(handles.ParaTab,'data',[{'Amplitude';'Offset';'X0';'Y0';'sigma_X';'sigma_Y';'theta'},DataP]);
 end
 guidata(hObject,handles);
 
@@ -617,20 +647,24 @@ if get(handles.Counting,'value') % do the atom counting
     atomcountimg=img;
     atomnumbermap=AtomNumber(atomcountimg,pixelsize,sigma, satcount);
     
-    if get(handles.Bgsub,'value')
-        bgimg = atomnumbermap(ymax:ymax+53, xmin:xmax,:);
-        [bgx,bgy] = size(bgimg);
-        bgCount = sum(sum(bgimg))/(bgx*bgy)
-    else 
-        bgCount = 0
-    end
+%     if get(handles.Bgsub,'value')
+%         bgimg = atomnumbermap(ymax:ymax+53, xmin:xmax,:);
+%         [bgx,bgy] = size(bgimg);
+%         bgCount = sum(sum(bgimg))/(bgx*bgy)
+%     else 
+%         bgCount = 0
+%     end
     
-    atomnumbermap = atomnumbermap(ymin:ymax,xmin:xmax) - bgCount;
+%     atomnumbermap = atomnumbermap(ymin:ymax,xmin:xmax) - bgCount;
     
+    atomnumbermap = atomnumbermap(ymin:ymax,xmin:xmax);
     atomnumber=sum(sum(atomnumbermap));
-    atomnumberG=FindAtomNumberGaussian(atomnumbermap);
+    Pgaussian=GaussianFittingFunction( atomnumbermap );
+    atomnumberG=Pgaussian(1)*Pgaussian(5)*Pgaussian(6)*2*pi;
     set(handles.AtomNumberG,'string',num2str(atomnumberG, '%10.3e' ));
     set(handles.AtomNumberP,'string',num2str(atomnumber, '%10.3e' ));
+    DataP=num2cell(Pgaussian');
+    set(handles.ParaTab,'data',[{'Amplitude';'Offset';'X0';'Y0';'sigma_X';'sigma_Y';'theta'},DataP]);
 end
 
 guidata(hObject,handles);
@@ -878,3 +912,21 @@ function Bgsub_Callback(hObject, eventdata, handles)
 % handles    structure with handles and user data (see GUIDATA)
 
 % Hint: get(hObject,'Value') returns toggle state of Bgsub
+
+
+% --- Executes on button press in Gfit.
+function Gfit_Callback(hObject, eventdata, handles)
+% hObject    handle to Gfit (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hint: get(hObject,'Value') returns toggle state of Gfit
+
+
+% --- Executes on button press in SecAct.
+function SecAct_Callback(hObject, eventdata, handles)
+% hObject    handle to SecAct (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hint: get(hObject,'Value') returns toggle state of SecAct
