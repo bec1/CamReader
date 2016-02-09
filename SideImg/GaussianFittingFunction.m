@@ -56,7 +56,6 @@ P0=[Amp,Offset,Xc0,Yc0,Xwidth,Ywidth,theta];
 Xdata={Xv,Yv};
 Ydata=ImgVec;
 P=fit2dgaussian(Xdata,Ydata,P0,[0,0,0,0,0,0,0]);
-
 catch
     %send the error message and give a all zero output
     msgbox('Something went wrong in guassian fitting');

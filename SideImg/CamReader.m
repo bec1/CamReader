@@ -22,7 +22,7 @@ function varargout = CamReader(varargin)
 
 % Edit the above text to modify the response to help CamReader
 
-% Last Modified by GUIDE v2.5 04-Feb-2016 16:15:01
+% Last Modified by GUIDE v2.5 05-Feb-2016 11:23:09
 
 % Begin initialization code - DO NOT EDIT
 gui_Singleton = 1;
@@ -199,20 +199,30 @@ if get(handles.Counting,'value') % do the atom counting
     atomcountimg=img;
     atomnumbermap=AtomNumber(atomcountimg,pixelsize,sigma, satcount);
     
-%     if get(handles.Bgsub,'value')
-%         bgimg = atomnumbermap(ymax:ymax+53, xmin:xmax,:);
-%         [bgx,bgy] = size(bgimg);
-%         bgCount = sum(sum(bgimg))/(bgx*bgy)
-%     else 
-%         bgCount = 0
-%     end
+    % crop the background area
+    BGx1=max(1,round(str2double(get(handles.BGx1,'string'))));
+    BGx2=min(Xr,round(str2double(get(handles.BGx2,'string'))));
+    BGy1=max(1,round(str2double(get(handles.BGy1,'string'))));
+    BGy2=min(Yr,round(str2double(get(handles.BGy2,'string'))));
+    %get the averaged background count
+    if get(handles.Bgsub,'value')
+        bgimg = atomnumbermap(BGy1:BGy2,BGx1:BGx2);
+        bgimg =bgimg(:);
+        bgimg(bgimg==inf)=[];
+        bgimg(isnan(bgimg))=[];
+        bgCount=sum(bgimg)/size(bgimg,1);
+    else 
+        bgCount = 0;
+    end
     
-    atomnumbermap = atomnumbermap(ymin:ymax,xmin:xmax);
+    atomnumbermap = atomnumbermap(ymin:ymax,xmin:xmax)-bgCount;
     atomnumber=sum(sum(atomnumbermap));
     set(handles.AtomNumberP,'string',num2str(atomnumber, '%10.3e' ));
-    if get(handles.Gfit)
+    if get(handles.Gfit,'value')
         Pgaussian=GaussianFittingFunction( atomnumbermap );
-        atomnumberG=Pgaussian(1)*Pgaussian(5)*Pgaussian(6)*2*pi;
+        Pgaussian(3)=Pgaussian(3)+xmin-1;
+        Pgaussian(4)=Pgaussian(4)+ymin-1;
+        atomnumberG=abs(Pgaussian(1)*Pgaussian(5)*Pgaussian(6)*2*pi);
         set(handles.AtomNumberG,'string',num2str(atomnumberG, '%10.3e' ));
         DataP=num2cell(Pgaussian');
         set(handles.ParaTab,'data',[{'Amplitude';'Offset';'X0';'Y0';'sigma_X';'sigma_Y';'theta'},DataP]);
@@ -308,22 +318,29 @@ while get(handles.Scanning,'value')
             ymax=min(Yr,ymax);
             atomcountimg=img;
             atomnumbermap=AtomNumber(atomcountimg,pixelsize,sigma, satcount);
-    
-%     if get(handles.Bgsub,'value')
-%         bgimg = atomnumbermap(ymax:ymax+53, xmin:xmax,:);
-%         [bgx,bgy] = size(bgimg);
-%         bgCount = sum(sum(bgimg))/(bgx*bgy)
-%     else 
-%         bgCount = 0
-%     end
-    
-%     atomnumbermap = atomnumbermap(ymin:ymax,xmin:xmax) - bgCount;
-            atomnumbermap = atomnumbermap(ymin:ymax,xmin:xmax);
+            % crop the background area
+            BGx1=max(1,round(str2double(get(handles.BGx1,'string'))));
+            BGx2=min(Xr,round(str2double(get(handles.BGx2,'string'))));
+            BGy1=max(1,round(str2double(get(handles.BGy1,'string'))));
+            BGy2=min(Yr,round(str2double(get(handles.BGy2,'string'))));
+            %get the averaged background count
+            if get(handles.Bgsub,'value')
+                bgimg = atomnumbermap(BGy1:BGy2,BGx1:BGx2);
+                bgimg =bgimg(:);
+                bgimg(bgimg==inf)=[];
+                bgimg(isnan(bgimg))=[];
+                bgCount=sum(bgimg)/size(bgimg,1);
+            else 
+                bgCount = 0;
+            end
+            atomnumbermap = atomnumbermap(ymin:ymax,xmin:xmax)-bgCount;
             atomnumber=sum(sum(atomnumbermap));
             set(handles.AtomNumberP,'string',num2str(atomnumber, '%10.3e' ));
-            if get(handles.Gfit)
+            if get(handles.Gfit,'value')
                 Pgaussian=GaussianFittingFunction( atomnumbermap );
-                atomnumberG=Pgaussian(1)*Pgaussian(5)*Pgaussian(6)*2*pi;
+                Pgaussian(3)=Pgaussian(3)+xmin-1;
+                Pgaussian(4)=Pgaussian(4)+ymin-1;
+                atomnumberG=abs(Pgaussian(1)*Pgaussian(5)*Pgaussian(6)*2*pi);
                 set(handles.AtomNumberG,'string',num2str(atomnumberG, '%10.3e' ));
                 DataP=num2cell(Pgaussian');
                 set(handles.ParaTab,'data',[{'Amplitude';'Offset';'X0';'Y0';'sigma_X';'sigma_Y';'theta'},DataP]);
@@ -425,21 +442,31 @@ if get(handles.Counting,'value') % do the atom counting
     ymax=min(Yr,ymax);
     atomcountimg=img;
     atomnumbermap=AtomNumber(atomcountimg,pixelsize,sigma, satcount);
+    % crop the background area
+    BGx1=max(1,round(str2double(get(handles.BGx1,'string'))));
+    BGx2=min(Xr,round(str2double(get(handles.BGx2,'string'))));
+    BGy1=max(1,round(str2double(get(handles.BGy1,'string'))));
+    BGy2=min(Yr,round(str2double(get(handles.BGy2,'string'))));
+    %get the averaged background count
+    if get(handles.Bgsub,'value')
+        bgimg = atomnumbermap(BGy1:BGy2,BGx1:BGx2);
+        bgimg =bgimg(:);
+        bgimg(bgimg==inf)=[];
+        bgimg(isnan(bgimg))=[];
+        bgCount=sum(bgimg)/size(bgimg,1);
+    else 
+        bgCount = 0;
+    end
+    atomnumbermap = atomnumbermap(ymin:ymax,xmin:xmax)-bgCount;
     
-%     if get(handles.Bgsub,'value')
-%         bgimg = atomnumbermap(ymax:ymax+53, xmin:xmax,:);
-%         [bgx,bgy] = size(bgimg);
-%         bgCount = sum(sum(bgimg))/(bgx*bgy)
-%     else 
-%         bgCount = 0
-%     end
-    atomnumbermap = atomnumbermap(ymin:ymax,xmin:xmax);
     atomnumber=sum(sum(atomnumbermap));
     set(handles.AtomNumberP,'string',num2str(atomnumber, '%10.3e' ));
     
-    if get(handles.Gfit)
+    if get(handles.Gfit,'value')
         Pgaussian=GaussianFittingFunction( atomnumbermap );
-        atomnumberG=Pgaussian(1)*Pgaussian(5)*Pgaussian(6)*2*pi;
+        Pgaussian(3)=Pgaussian(3)+xmin-1;
+        Pgaussian(4)=Pgaussian(4)+ymin-1;
+        atomnumberG=abs(Pgaussian(1)*Pgaussian(5)*Pgaussian(6)*2*pi);
         set(handles.AtomNumberG,'string',num2str(atomnumberG, '%10.3e' ));
         set(handles.AtomNumberP,'string',num2str(atomnumber, '%10.3e' ));
         DataP=num2cell(Pgaussian');
@@ -651,24 +678,34 @@ if get(handles.Counting,'value') % do the atom counting
     xmax=min(Xr,xmax);
     ymin=max(1,ymin);
     ymax=min(Yr,ymax);
+    
     atomcountimg=img;
+    
+    % crop the background area
+    BGx1=max(1,round(str2double(get(handles.BGx1,'string'))));
+    BGx2=min(Xr,round(str2double(get(handles.BGx2,'string'))));
+    BGy1=max(1,round(str2double(get(handles.BGy1,'string'))));
+    BGy2=min(Yr,round(str2double(get(handles.BGy2,'string'))));
+    %get the averaged background count
     atomnumbermap=AtomNumber(atomcountimg,pixelsize,sigma, satcount);
+    if get(handles.Bgsub,'value')
+        bgimg = atomnumbermap(BGy1:BGy2,BGx1:BGx2);
+        bgimg =bgimg(:);
+        bgimg(bgimg==inf)=[];
+        bgimg(isnan(bgimg))=[];
+        bgCount=sum(bgimg)/size(bgimg,1);
+    else 
+        bgCount = 0;
+    end
     
-%     if get(handles.Bgsub,'value')
-%         bgimg = atomnumbermap(ymax:ymax+53, xmin:xmax,:);
-%         [bgx,bgy] = size(bgimg);
-%         bgCount = sum(sum(bgimg))/(bgx*bgy)
-%     else 
-%         bgCount = 0
-%     end
-    
-%     atomnumbermap = atomnumbermap(ymin:ymax,xmin:xmax) - bgCount;
-    atomnumbermap = atomnumbermap(ymin:ymax,xmin:xmax);
+    atomnumbermap = atomnumbermap(ymin:ymax,xmin:xmax) - bgCount;
     atomnumber=sum(sum(atomnumbermap));
     set(handles.AtomNumberP,'string',num2str(atomnumber, '%10.3e' ));
-    if get(handles.Gfit)
+    if get(handles.Gfit,'value')
         Pgaussian=GaussianFittingFunction( atomnumbermap );
-        atomnumberG=Pgaussian(1)*Pgaussian(5)*Pgaussian(6)*2*pi;
+        Pgaussian(3)=Pgaussian(3)+xmin-1;
+        Pgaussian(4)=Pgaussian(4)+ymin-1;
+        atomnumberG=abs(Pgaussian(1)*Pgaussian(5)*Pgaussian(6)*2*pi);
         set(handles.AtomNumberG,'string',num2str(atomnumberG, '%10.3e' ));
         DataP=num2cell(Pgaussian');
         set(handles.ParaTab,'data',[{'Amplitude';'Offset';'X0';'Y0';'sigma_X';'sigma_Y';'theta'},DataP]);
@@ -938,3 +975,112 @@ function SecAct_Callback(hObject, eventdata, handles)
 % handles    structure with handles and user data (see GUIDATA)
 
 % Hint: get(hObject,'Value') returns toggle state of SecAct
+
+
+
+function BGx1_Callback(hObject, eventdata, handles)
+% hObject    handle to BGx1 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hints: get(hObject,'String') returns contents of BGx1 as text
+%        str2double(get(hObject,'String')) returns contents of BGx1 as a double
+
+
+% --- Executes during object creation, after setting all properties.
+function BGx1_CreateFcn(hObject, eventdata, handles)
+% hObject    handle to BGx1 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    empty - handles not created until after all CreateFcns called
+
+% Hint: edit controls usually have a white background on Windows.
+%       See ISPC and COMPUTER.
+if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
+    set(hObject,'BackgroundColor','white');
+end
+
+
+
+function BGx2_Callback(hObject, eventdata, handles)
+% hObject    handle to BGx2 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hints: get(hObject,'String') returns contents of BGx2 as text
+%        str2double(get(hObject,'String')) returns contents of BGx2 as a double
+
+
+% --- Executes during object creation, after setting all properties.
+function BGx2_CreateFcn(hObject, eventdata, handles)
+% hObject    handle to BGx2 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    empty - handles not created until after all CreateFcns called
+
+% Hint: edit controls usually have a white background on Windows.
+%       See ISPC and COMPUTER.
+if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
+    set(hObject,'BackgroundColor','white');
+end
+
+
+
+function BGy1_Callback(hObject, eventdata, handles)
+% hObject    handle to BGy1 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hints: get(hObject,'String') returns contents of BGy1 as text
+%        str2double(get(hObject,'String')) returns contents of BGy1 as a double
+
+
+% --- Executes during object creation, after setting all properties.
+function BGy1_CreateFcn(hObject, eventdata, handles)
+% hObject    handle to BGy1 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    empty - handles not created until after all CreateFcns called
+
+% Hint: edit controls usually have a white background on Windows.
+%       See ISPC and COMPUTER.
+if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
+    set(hObject,'BackgroundColor','white');
+end
+
+
+
+function BGy2_Callback(hObject, eventdata, handles)
+% hObject    handle to BGy2 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hints: get(hObject,'String') returns contents of BGy2 as text
+%        str2double(get(hObject,'String')) returns contents of BGy2 as a double
+
+
+% --- Executes during object creation, after setting all properties.
+function BGy2_CreateFcn(hObject, eventdata, handles)
+% hObject    handle to BGy2 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    empty - handles not created until after all CreateFcns called
+
+% Hint: edit controls usually have a white background on Windows.
+%       See ISPC and COMPUTER.
+if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
+    set(hObject,'BackgroundColor','white');
+end
+
+
+% --- Executes on button press in BGcrop.
+function BGcrop_Callback(hObject, eventdata, handles)
+% hObject    handle to BGcrop (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+[~,rect]=imcrop(handles.axes1);
+xmin=round(rect(1));
+ymin=round(rect(2));
+xmax=round(rect(3))+xmin-1;
+ymax=round(rect(4))+ymin-1;
+set(handles.BGx1,'string',num2str(xmin));
+set(handles.BGx2,'string',num2str(xmax));
+set(handles.BGy1,'string',num2str(ymin));
+set(handles.BGy2,'string',num2str(ymax));
+guidata(hObject,handles);
